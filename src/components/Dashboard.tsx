@@ -7,6 +7,7 @@ import CommandPalette from './CommandPalette'
 import CategoryFilter from './CategoryFilter'
 import FeatureCard from './FeatureCard'
 import Sidebar from './Sidebar'
+import ThemeToggle from './ThemeToggle'
 
 export default function Dashboard() {
   const [query, setQuery] = useState('')
@@ -30,8 +31,13 @@ export default function Dashboard() {
   const totalCount = featuresConfig.length
 
   return (
-    <div className="mesh-gradient relative min-h-screen text-white">
+    <div className="mesh-gradient relative min-h-screen cursor-none">
       <Sidebar features={featuresConfig} />
+
+      {/* Theme toggle — fixed top-right */}
+      <div className="fixed right-4 top-4 z-50">
+        <ThemeToggle />
+      </div>
 
       <main className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
         {/* Hero Section */}
@@ -41,21 +47,29 @@ export default function Dashboard() {
           transition={{ duration: 0.5 }}
           className="mb-10 text-center"
         >
-          <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-primary-500/20 bg-primary-500/10 px-4 py-1.5 text-sm text-primary-300">
+          <div
+            className="mb-6 inline-flex items-center gap-2 rounded-full border border-primary-500/20 bg-primary-500/10 px-4 py-1.5 text-sm text-primary-600 dark:text-primary-300"
+          >
             <Boxes className="h-4 w-4" />
             {activeCount} Active &middot; {totalCount} Total Tools
           </div>
 
           <h1 className="mb-3 text-4xl font-bold tracking-tight sm:text-5xl">
-            <span className="bg-gradient-to-r from-white via-white to-surface-400 bg-clip-text text-transparent">
+            <span
+              className="bg-clip-text text-transparent"
+              style={{
+                backgroundImage:
+                  'linear-gradient(to right, var(--text-heading), var(--text-muted))',
+              }}
+            >
               Personal Workspace
             </span>
             <br />
-            <span className="bg-gradient-to-r from-primary-400 to-primary-600 bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-primary-500 to-primary-700 bg-clip-text text-transparent dark:from-primary-400 dark:to-primary-600">
               & Tool Suite
             </span>
           </h1>
-          <p className="mx-auto max-w-lg text-surface-400">
+          <p style={{ color: 'var(--text-muted)' }} className="mx-auto max-w-lg">
             Your centralized hub for development, AI, finance, and media tools.
             Everything you need in one place.
           </p>
@@ -93,7 +107,7 @@ export default function Dashboard() {
             animate={{ opacity: 1 }}
             className="py-20 text-center"
           >
-            <p className="text-lg text-surface-500">
+            <p className="text-lg" style={{ color: 'var(--text-faint)' }}>
               No tools match your search.
             </p>
             <button
@@ -101,7 +115,7 @@ export default function Dashboard() {
                 setQuery('')
                 setSelectedCategory('All')
               }}
-              className="mt-3 text-sm text-primary-400 hover:text-primary-300"
+              className="mt-3 cursor-none text-sm text-primary-500 hover:text-primary-400"
             >
               Clear filters
             </button>
@@ -109,7 +123,10 @@ export default function Dashboard() {
         )}
 
         {/* Footer */}
-        <footer className="mt-16 border-t border-white/[0.06] py-6 text-center text-xs text-surface-600">
+        <footer
+          className="mt-16 py-6 text-center text-xs"
+          style={{ borderTop: '1px solid var(--footer-border)', color: 'var(--footer-text)' }}
+        >
           Built with React, Tailwind CSS, and Framer Motion
         </footer>
       </main>

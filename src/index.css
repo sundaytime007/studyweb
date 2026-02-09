@@ -1,5 +1,14 @@
 @import "tailwindcss";
 
+/* ============================================================
+   Tailwind v4: class-based dark mode
+   Light mode is the default; adding .dark to <html> activates dark
+   ============================================================ */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* ============================================================
+   Theme tokens (Tailwind @theme)
+   ============================================================ */
 @theme {
   --color-primary-50: #eef2ff;
   --color-primary-100: #e0e7ff;
@@ -26,17 +35,140 @@
   --color-surface-950: #020617;
 }
 
-/* Mesh gradient background */
-.mesh-gradient {
-  background-color: #0a0a1a;
-  background-image:
-    radial-gradient(at 20% 20%, rgba(99, 102, 241, 0.15) 0%, transparent 50%),
-    radial-gradient(at 80% 30%, rgba(79, 70, 229, 0.1) 0%, transparent 50%),
-    radial-gradient(at 40% 80%, rgba(129, 140, 248, 0.08) 0%, transparent 50%),
-    radial-gradient(at 90% 80%, rgba(99, 102, 241, 0.06) 0%, transparent 50%);
+/* ============================================================
+   CSS Custom Properties: Light (default) / Dark themes
+   ============================================================ */
+:root {
+  /* --- Page background --- */
+  --page-bg: #f0f2f5;
+  --page-gradient-1: rgba(99, 102, 241, 0.06);
+  --page-gradient-2: rgba(79, 70, 229, 0.04);
+  --page-gradient-3: rgba(129, 140, 248, 0.05);
+  --page-gradient-4: rgba(99, 102, 241, 0.03);
+
+  /* --- Cards --- */
+  --card-bg: rgba(255, 255, 255, 0.75);
+  --card-bg-hover: rgba(255, 255, 255, 0.9);
+  --card-border: rgba(0, 0, 0, 0.07);
+  --card-border-hover: rgba(0, 0, 0, 0.13);
+
+  /* --- Text --- */
+  --text-heading: #0f172a;
+  --text-body: #334155;
+  --text-muted: #64748b;
+  --text-faint: #94a3b8;
+
+  /* --- Sidebar --- */
+  --sidebar-bg: rgba(255, 255, 255, 0.92);
+  --sidebar-border: rgba(0, 0, 0, 0.07);
+  --sidebar-btn-bg: rgba(255, 255, 255, 0.8);
+
+  /* --- Search bar --- */
+  --search-bg: rgba(255, 255, 255, 0.6);
+  --search-border: rgba(0, 0, 0, 0.08);
+  --search-focus-border: rgba(99, 102, 241, 0.4);
+  --search-text: #0f172a;
+  --search-placeholder: #94a3b8;
+
+  /* --- Pill filters --- */
+  --pill-bg: rgba(0, 0, 0, 0.04);
+  --pill-border: rgba(0, 0, 0, 0.06);
+  --pill-text: #64748b;
+  --pill-hover-border: rgba(0, 0, 0, 0.12);
+  --pill-hover-text: #334155;
+
+  /* --- Badge / Status --- */
+  --badge-bg: rgba(0, 0, 0, 0.04);
+
+  /* --- Footer --- */
+  --footer-border: rgba(0, 0, 0, 0.06);
+  --footer-text: #94a3b8;
+
+  /* --- Card glow gradient (for border effect) --- */
+  --glow-from: rgba(99, 102, 241, 0.2);
+  --glow-to: rgba(129, 140, 248, 0.15);
+
+  /* --- Kbd --- */
+  --kbd-bg: rgba(0, 0, 0, 0.05);
+  --kbd-border: rgba(0, 0, 0, 0.1);
+  --kbd-text: #94a3b8;
+
+  /* --- Cursor --- */
+  --cursor-color: #4f46e5;
+  --cursor-dot: #6366f1;
+
+  /* --- Scrollbar --- */
+  --scrollbar-thumb: rgba(0, 0, 0, 0.15);
+  --scrollbar-thumb-hover: rgba(0, 0, 0, 0.25);
 }
 
-/* Scrollbar styling */
+/* Dark theme overrides */
+.dark {
+  --page-bg: #0a0a1a;
+  --page-gradient-1: rgba(99, 102, 241, 0.15);
+  --page-gradient-2: rgba(79, 70, 229, 0.1);
+  --page-gradient-3: rgba(129, 140, 248, 0.08);
+  --page-gradient-4: rgba(99, 102, 241, 0.06);
+
+  --card-bg: rgba(255, 255, 255, 0.03);
+  --card-bg-hover: rgba(255, 255, 255, 0.06);
+  --card-border: rgba(255, 255, 255, 0.06);
+  --card-border-hover: rgba(255, 255, 255, 0.12);
+
+  --text-heading: #ffffff;
+  --text-body: #e2e8f0;
+  --text-muted: #94a3b8;
+  --text-faint: #64748b;
+
+  --sidebar-bg: rgba(2, 6, 23, 0.95);
+  --sidebar-border: rgba(255, 255, 255, 0.06);
+  --sidebar-btn-bg: rgba(15, 23, 42, 0.8);
+
+  --search-bg: rgba(255, 255, 255, 0.04);
+  --search-border: rgba(255, 255, 255, 0.08);
+  --search-focus-border: rgba(99, 102, 241, 0.4);
+  --search-text: #ffffff;
+  --search-placeholder: #64748b;
+
+  --pill-bg: rgba(255, 255, 255, 0.03);
+  --pill-border: rgba(255, 255, 255, 0.06);
+  --pill-text: #94a3b8;
+  --pill-hover-border: rgba(255, 255, 255, 0.12);
+  --pill-hover-text: #e2e8f0;
+
+  --footer-border: rgba(255, 255, 255, 0.06);
+  --footer-text: #475569;
+
+  --glow-from: rgba(99, 102, 241, 0.3);
+  --glow-to: rgba(129, 140, 248, 0.2);
+
+  --kbd-bg: rgba(255, 255, 255, 0.05);
+  --kbd-border: rgba(255, 255, 255, 0.1);
+  --kbd-text: #64748b;
+
+  --cursor-color: #79f2e7;
+  --cursor-dot: #4ed5b4;
+
+  --scrollbar-thumb: rgba(100, 116, 139, 0.3);
+  --scrollbar-thumb-hover: rgba(100, 116, 139, 0.5);
+}
+
+/* ============================================================
+   Mesh gradient background
+   ============================================================ */
+.mesh-gradient {
+  background-color: var(--page-bg);
+  background-image:
+    radial-gradient(at 20% 20%, var(--page-gradient-1) 0%, transparent 50%),
+    radial-gradient(at 80% 30%, var(--page-gradient-2) 0%, transparent 50%),
+    radial-gradient(at 40% 80%, var(--page-gradient-3) 0%, transparent 50%),
+    radial-gradient(at 90% 80%, var(--page-gradient-4) 0%, transparent 50%);
+  transition: background-color 0.4s ease;
+}
+
+/* ============================================================
+   Scrollbar
+   ============================================================ */
 ::-webkit-scrollbar {
   width: 6px;
 }
@@ -44,14 +176,16 @@
   background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  background: rgba(100, 116, 139, 0.3);
+  background: var(--scrollbar-thumb);
   border-radius: 3px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(100, 116, 139, 0.5);
+  background: var(--scrollbar-thumb-hover);
 }
 
-/* Card glow effect */
+/* ============================================================
+   Card glow border effect
+   ============================================================ */
 .card-glow {
   position: relative;
 }
@@ -61,7 +195,7 @@
   inset: -1px;
   border-radius: inherit;
   padding: 1px;
-  background: linear-gradient(135deg, rgba(99, 102, 241, 0.3), transparent, rgba(129, 140, 248, 0.2));
+  background: linear-gradient(135deg, var(--glow-from), transparent, var(--glow-to));
   mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
   mask-composite: exclude;
   opacity: 0;
@@ -69,4 +203,88 @@
 }
 .card-glow:hover::before {
   opacity: 1;
+}
+
+/* ============================================================
+   Custom Cursor (from Gist — adapted for theming)
+   ============================================================ */
+.custom-cursor {
+  position: fixed;
+  width: 30px;
+  height: 30px;
+  pointer-events: none;
+  z-index: 9999;
+  visibility: hidden;
+  background-image:
+    linear-gradient(to right, var(--cursor-color) 10px, transparent 0),
+    linear-gradient(to bottom, var(--cursor-color) 10px, transparent 0),
+    linear-gradient(to left, var(--cursor-color) 10px, transparent 0),
+    linear-gradient(to bottom, var(--cursor-color) 10px, transparent 0),
+    linear-gradient(to right, var(--cursor-color) 10px, transparent 0),
+    linear-gradient(to top, var(--cursor-color) 10px, transparent 0),
+    linear-gradient(to left, var(--cursor-color) 10px, transparent 0),
+    linear-gradient(to top, var(--cursor-color) 10px, transparent 0);
+  background-repeat: no-repeat;
+  background-position:
+    top left, top left, top right, top right,
+    bottom left, bottom left, bottom right, bottom right;
+  background-size:
+    20px 2px, 2px 20px, 20px 2px, 2px 20px,
+    20px 2px, 2px 20px, 20px 2px, 2px 20px;
+}
+
+.custom-cursor-dot {
+  position: fixed;
+  width: 7px;
+  height: 7px;
+  pointer-events: none;
+  z-index: 9999;
+  background: var(--cursor-dot);
+  border-radius: 50%;
+  visibility: hidden;
+}
+
+/* Hide custom cursor on touch devices */
+@media (hover: none) and (pointer: coarse) {
+  .custom-cursor,
+  .custom-cursor-dot {
+    display: none !important;
+  }
+}
+
+/* ============================================================
+   Theme toggle switch (inspired by Gist — redesigned for header)
+   ============================================================ */
+.theme-toggle {
+  position: relative;
+  width: 52px;
+  height: 28px;
+  border-radius: 14px;
+  background: linear-gradient(135deg, #fbbf24, #f59e0b);
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.15);
+  cursor: pointer;
+  transition: background 0.3s ease, box-shadow 0.3s ease;
+  border: none;
+  padding: 0;
+}
+.dark .theme-toggle {
+  background: linear-gradient(135deg, #475569, #334155);
+}
+.theme-toggle-knob {
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: #ffffff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  transition: transform 0.3s ease, background 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.dark .theme-toggle-knob {
+  transform: translateX(24px);
+  background: #1e293b;
 }

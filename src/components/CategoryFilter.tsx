@@ -20,11 +20,20 @@ export default function CategoryFilter({
           <button
             key={cat}
             onClick={() => onSelect(cat)}
-            className={`relative rounded-full border px-4 py-1.5 text-sm font-medium transition-colors ${
+            className={`relative cursor-none rounded-full border px-4 py-1.5 text-sm font-medium transition-colors ${
               isActive
-                ? 'border-primary-500/40 bg-primary-500/15 text-primary-300'
-                : 'border-white/[0.06] bg-white/[0.03] text-surface-400 hover:border-white/[0.12] hover:text-surface-200'
+                ? 'border-primary-500/40 bg-primary-500/15 text-primary-600 dark:text-primary-300'
+                : ''
             }`}
+            style={
+              isActive
+                ? undefined
+                : {
+                    background: 'var(--pill-bg)',
+                    borderColor: 'var(--pill-border)',
+                    color: 'var(--pill-text)',
+                  }
+            }
           >
             {isActive && (
               <motion.div
