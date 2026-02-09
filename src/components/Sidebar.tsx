@@ -22,7 +22,7 @@ export default function Sidebar({ features }: SidebarProps) {
       {/* Toggle button — visible on larger screens */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="fixed left-4 top-4 z-50 hidden cursor-none rounded-lg p-2 backdrop-blur-sm transition-colors lg:block"
+        className="fixed left-4 top-4 z-50 hidden rounded-lg p-2 backdrop-blur-sm transition-colors lg:block"
         style={{
           background: 'var(--sidebar-btn-bg)',
           border: '1px solid var(--sidebar-border)',
@@ -64,7 +64,7 @@ export default function Sidebar({ features }: SidebarProps) {
                   return (
                     <li key={tool.id}>
                       <button
-                        className="flex w-full cursor-none items-center gap-3 rounded-lg px-3 py-2 text-sm transition-colors hover:bg-black/[0.04] dark:hover:bg-white/[0.05]"
+                        className="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm transition-colors hover:bg-black/[0.04] dark:hover:bg-white/[0.05]"
                         style={{ color: 'var(--text-body)' }}
                       >
                         <Icon className="h-4 w-4" style={{ color: tool.accentColor }} strokeWidth={1.8} />
@@ -91,7 +91,7 @@ export default function Sidebar({ features }: SidebarProps) {
                   return (
                     <li key={tool.id}>
                       <button
-                        className="flex w-full cursor-none items-center gap-3 rounded-lg px-3 py-2 text-sm transition-colors hover:bg-black/[0.04] dark:hover:bg-white/[0.05]"
+                        className="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm transition-colors hover:bg-black/[0.04] dark:hover:bg-white/[0.05]"
                         style={{ color: 'var(--text-body)' }}
                       >
                         <Icon className="h-4 w-4" style={{ color: tool.accentColor }} strokeWidth={1.8} />

@@ -39,7 +39,7 @@ export default function CommandPalette({
         value={query}
         onChange={(e) => onQueryChange(e.target.value)}
         placeholder="Search tools..."
-        className="w-full cursor-none rounded-xl py-2.5 pl-10 pr-16 text-sm outline-none backdrop-blur-sm transition-colors"
+        className="w-full rounded-xl py-2.5 pl-10 pr-16 text-sm outline-none backdrop-blur-sm transition-colors"
         style={{
           background: 'var(--search-bg)',
           border: '1px solid var(--search-border)',

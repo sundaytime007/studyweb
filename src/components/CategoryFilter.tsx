@@ -20,7 +20,7 @@ export default function CategoryFilter({
           <button
             key={cat}
             onClick={() => onSelect(cat)}
-            className={`relative cursor-none rounded-full border px-4 py-1.5 text-sm font-medium transition-colors ${
+            className={`relative rounded-full border px-4 py-1.5 text-sm font-medium transition-colors ${
               isActive
                 ? 'border-primary-500/40 bg-primary-500/15 text-primary-600 dark:text-primary-300'
                 : ''

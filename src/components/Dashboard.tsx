@@ -31,7 +31,7 @@ export default function Dashboard() {
   const totalCount = featuresConfig.length
 
   return (
-    <div className="mesh-gradient relative min-h-screen cursor-none">
+    <div className="mesh-gradient relative min-h-screen">
       <Sidebar features={featuresConfig} />
 
       {/* Theme toggle — fixed top-right */}
@@ -115,7 +115,7 @@ export default function Dashboard() {
                 setQuery('')
                 setSelectedCategory('All')
               }}
-              className="mt-3 cursor-none text-sm text-primary-500 hover:text-primary-400"
+              className="mt-3 text-sm text-primary-500 hover:text-primary-400"
             >
               Clear filters
             </button>

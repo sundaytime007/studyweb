@@ -32,7 +32,7 @@ export default function FeatureCard({ feature, index }: FeatureCardProps) {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3, delay: index * 0.05 }}
       whileHover={isDisabled ? undefined : { scale: 1.02, y: -4 }}
-      className={`card-glow group relative cursor-none rounded-2xl backdrop-blur-sm transition-colors ${
+      className={`card-glow group relative rounded-2xl backdrop-blur-sm transition-colors ${
         isDisabled ? 'pointer-events-none opacity-50' : ''
       }`}
       style={{
