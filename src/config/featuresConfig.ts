@@ -7,6 +7,7 @@ import {
   Database,
   Globe,
   Palette,
+  Presentation,
   Shield,
   Terminal,
   FileText,
@@ -95,6 +96,15 @@ export const featuresConfig: Feature[] = [
     category: 'Finance',
     status: 'coming-soon',
     accentColor: '#06b6d4',
+  },
+  {
+    id: 'ai-ppt-generator',
+    title: 'AI PPT Generator',
+    description: 'Neuro-symbolic engine that auto-generates professional slide decks',
+    icon: Presentation,
+    category: 'AI Tools',
+    status: 'beta',
+    accentColor: '#f43f5e',
   },
   {
     id: 'ai-image-gen',
