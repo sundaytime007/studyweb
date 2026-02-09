@@ -93,12 +93,13 @@ export default function CustomCursor() {
       const cx = rect.left + rect.width / 2
       const cy = rect.top + rect.height / 2
 
-      // Snap position to target center AND expand to target size
+      // Snap position to target center AND match target size exactly
+      // so the four bracket corners align with the element's four corners
       gsap.to(cursor, {
         left: cx,
         top: cy,
-        width: rect.width + 12,
-        height: rect.height + 12,
+        width: rect.width,
+        height: rect.height,
         duration: 0.3,
         ease: 'power2.out',
         overwrite: 'auto',
@@ -114,10 +115,10 @@ export default function CustomCursor() {
       const dx = me.clientX - cx
       const dy = me.clientY - cy
 
-      // Slight magnetic offset toward the mouse within the target
+      // Very subtle magnetic offset — keep corners close to the element edges
       gsap.to(cursor, {
-        left: cx + dx * 0.1,
-        top: cy + dy * 0.1,
+        left: cx + dx * 0.03,
+        top: cy + dy * 0.03,
         duration: 0.2,
         ease: 'power2.out',
         overwrite: 'auto',
