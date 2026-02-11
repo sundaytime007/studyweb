@@ -19,12 +19,14 @@ const statusStyles: Record<Feature['status'], { label: string; className: string
 interface FeatureCardProps {
   feature: Feature
   index: number
+  onNavigate?: (id: string) => void
 }
 
-export default function FeatureCard({ feature, index }: FeatureCardProps) {
-  const { icon: Icon, title, description, status, accentColor } = feature
+export default function FeatureCard({ feature, index, onNavigate }: FeatureCardProps) {
+  const { icon: Icon, title, description, status, accentColor, id } = feature
   const statusInfo = statusStyles[status]
   const isDisabled = status === 'coming-soon'
+  const isClickable = !isDisabled && onNavigate
 
   return (
     <motion.div
@@ -32,8 +34,9 @@ export default function FeatureCard({ feature, index }: FeatureCardProps) {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3, delay: index * 0.05 }}
       whileHover={isDisabled ? undefined : { scale: 1.02, y: -4 }}
+      onClick={() => isClickable && onNavigate(id)}
       className={`card-glow group relative rounded-2xl backdrop-blur-sm transition-colors ${
-        isDisabled ? 'pointer-events-none opacity-50' : ''
+        isDisabled ? 'pointer-events-none opacity-50' : 'cursor-pointer'
       }`}
       style={{
         background: 'var(--card-bg)',

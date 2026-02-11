@@ -9,7 +9,11 @@ import FeatureCard from './FeatureCard'
 import Sidebar from './Sidebar'
 import ThemeToggle from './ThemeToggle'
 
-export default function Dashboard() {
+interface DashboardProps {
+  onNavigate?: (featureId: string) => void
+}
+
+export default function Dashboard({ onNavigate }: DashboardProps) {
   const [query, setQuery] = useState('')
   const [selectedCategory, setSelectedCategory] = useState<Category>('All')
 
@@ -96,7 +100,7 @@ export default function Dashboard() {
         {/* Feature Grid */}
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
           {filteredFeatures.map((feature, index) => (
-            <FeatureCard key={feature.id} feature={feature} index={index} />
+            <FeatureCard key={feature.id} feature={feature} index={index} onNavigate={onNavigate} />
           ))}
         </div>
 
