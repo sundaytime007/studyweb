@@ -170,12 +170,12 @@ export const featuresConfig: Feature[] = [
     accentColor: '#eab308',
   },
   {
-    id: 'video-editor',
-    title: '视频编辑器',
-    description: '在浏览器中剪辑、合并和导出视频片段',
+    id: 'video-extractor',
+    title: '视频提取器',
+    description: '输入抖音链接，提取无水印原视频下载地址',
     icon: Video,
     category: '影音媒体',
-    status: 'coming-soon',
+    status: 'active',
     accentColor: '#e11d48',
   },
   {
