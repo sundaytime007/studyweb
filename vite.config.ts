@@ -97,7 +97,7 @@ Rules:
             if (!content) {
               res.statusCode = 502
               res.setHeader('Content-Type', 'application/json')
-              res.end(JSON.stringify({ error: 'Empty response from DeepSeek' }))
+              res.end(JSON.stringify({ error: 'DeepSeek 返回了空响应' }))
               return
             }
 
@@ -108,7 +108,7 @@ Rules:
             res.setHeader('Content-Type', 'application/json')
             res.end(
               JSON.stringify({
-                error: err instanceof Error ? err.message : 'Unknown error',
+                error: err instanceof Error ? err.message : '未知错误',
               }),
             )
           }

@@ -62,7 +62,7 @@ export default function AIPptGenerator({ onBack }: Props) {
       setPom(data)
       setStep('preview')
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Generation failed')
+      setError(err instanceof Error ? err.message : '生成失败')
       setStep('input')
     }
   }
@@ -73,7 +73,7 @@ export default function AIPptGenerator({ onBack }: Props) {
     try {
       await buildPptx(pom, vibe)
     } catch {
-      setError('Failed to build PPTX file')
+      setError('PPTX 文件生成失败')
     } finally {
       setDownloading(false)
     }
@@ -113,7 +113,7 @@ export default function AIPptGenerator({ onBack }: Props) {
             </div>
             <div>
               <h1 className="text-xl font-bold" style={{ color: 'var(--text-heading)' }}>
-                AI PPT Generator
+                AI 演示文稿生成器
               </h1>
               <p className="text-xs" style={{ color: 'var(--text-muted)' }}>
                 DeepSeek V3 驱动 &middot; 输入主题，生成专业演示文稿

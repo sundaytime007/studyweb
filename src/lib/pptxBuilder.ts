@@ -141,7 +141,7 @@ function addClosingSlide(pptx: PptxGenJS, slide: Slide, theme: typeof THEMES.pro
   const s = pptx.addSlide()
   s.background = { color: theme.bg }
 
-  s.addText(slide.data.title || 'Thank You', {
+  s.addText(slide.data.title || '谢谢', {
     x: 0.8, y: 1.8, w: 8.4, h: 1.0,
     fontSize: 36, fontFace: FONT, color: theme.text, bold: true, align: 'center',
   })
@@ -164,7 +164,7 @@ export async function buildPptx(pom: POM, vibe = 'professional'): Promise<void> 
   const theme = THEMES[vibe] ?? THEMES.professional
   const pptx = new PptxGenJS()
   pptx.layout = 'LAYOUT_WIDE'
-  pptx.author = 'AI PPT Generator'
+  pptx.author = 'AI 演示文稿生成器'
   pptx.title = pom.meta.title
 
   for (const slide of pom.slides) {

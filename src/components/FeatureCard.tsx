@@ -3,15 +3,15 @@ import type { Feature } from '../types/features'
 
 const statusStyles: Record<Feature['status'], { label: string; className: string }> = {
   active: {
-    label: 'Active',
+    label: '已上线',
     className: 'bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 border-emerald-500/30',
   },
   beta: {
-    label: 'Beta',
+    label: '测试中',
     className: 'bg-amber-500/15 text-amber-600 dark:text-amber-400 border-amber-500/30',
   },
   'coming-soon': {
-    label: 'Coming Soon',
+    label: '即将推出',
     className: 'bg-surface-500/15 text-surface-500 dark:text-surface-400 border-surface-500/30',
   },
 }

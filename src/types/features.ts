@@ -3,13 +3,13 @@ import type { LucideIcon } from 'lucide-react'
 export type FeatureStatus = 'active' | 'beta' | 'coming-soon'
 
 export type Category =
-  | 'All'
-  | 'Development'
-  | 'AI Tools'
-  | 'Finance'
-  | 'Media'
-  | 'Productivity'
-  | 'Education'
+  | '全部'
+  | '开发工具'
+  | 'AI 工具'
+  | '金融理财'
+  | '影音媒体'
+  | '效率办公'
+  | '教育学习'
 
 export interface Feature {
   id: string

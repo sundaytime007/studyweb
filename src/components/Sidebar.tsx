@@ -56,7 +56,7 @@ export default function Sidebar({ features }: SidebarProps) {
                 style={{ color: 'var(--text-faint)' }}
               >
                 <Clock className="h-3.5 w-3.5" />
-                Quick Access
+                快速访问
               </div>
               <ul className="space-y-1">
                 {recentTools.map((tool) => {
@@ -83,7 +83,7 @@ export default function Sidebar({ features }: SidebarProps) {
                 style={{ color: 'var(--text-faint)' }}
               >
                 <Star className="h-3.5 w-3.5" />
-                In Beta
+                测试中
               </div>
               <ul className="space-y-1">
                 {favoriteTools.map((tool) => {

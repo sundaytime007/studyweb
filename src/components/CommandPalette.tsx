@@ -38,7 +38,7 @@ export default function CommandPalette({
         type="text"
         value={query}
         onChange={(e) => onQueryChange(e.target.value)}
-        placeholder="Search tools..."
+        placeholder="搜索工具..."
         className="w-full rounded-xl py-2.5 pl-10 pr-16 text-sm outline-none backdrop-blur-sm transition-colors"
         style={{
           background: 'var(--search-bg)',

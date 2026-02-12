@@ -8,7 +8,7 @@ export default function ThemeToggle() {
     <button
       onClick={toggleTheme}
       className="theme-toggle"
-      aria-label={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
+      aria-label={isDark ? '切换到亮色模式' : '切换到暗色模式'}
     >
       <span className="theme-toggle-knob">
         {isDark ? (

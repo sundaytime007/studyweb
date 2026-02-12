@@ -15,7 +15,7 @@ interface DashboardProps {
 
 export default function Dashboard({ onNavigate }: DashboardProps) {
   const [query, setQuery] = useState('')
-  const [selectedCategory, setSelectedCategory] = useState<Category>('All')
+  const [selectedCategory, setSelectedCategory] = useState<Category>('全部')
 
   const filteredFeatures = useMemo(() => {
     return featuresConfig.filter((feature) => {
@@ -25,7 +25,7 @@ export default function Dashboard({ onNavigate }: DashboardProps) {
         feature.description.toLowerCase().includes(query.toLowerCase())
 
       const matchesCategory =
-        selectedCategory === 'All' || feature.category === selectedCategory
+        selectedCategory === '全部' || feature.category === selectedCategory
 
       return matchesQuery && matchesCategory
     })
@@ -55,7 +55,7 @@ export default function Dashboard({ onNavigate }: DashboardProps) {
             className="mb-6 inline-flex items-center gap-2 rounded-full border border-primary-500/20 bg-primary-500/10 px-4 py-1.5 text-sm text-primary-600 dark:text-primary-300"
           >
             <Boxes className="h-4 w-4" />
-            {activeCount} Active &middot; {totalCount} Total Tools
+            已上线 {activeCount} 个 &middot; 共 {totalCount} 个工具
           </div>
 
           <h1 className="mb-3 text-4xl font-bold tracking-tight sm:text-5xl">
@@ -66,16 +66,16 @@ export default function Dashboard({ onNavigate }: DashboardProps) {
                   'linear-gradient(to right, var(--text-heading), var(--text-muted))',
               }}
             >
-              Personal Workspace
+              个人工作台
             </span>
             <br />
             <span className="bg-gradient-to-r from-primary-500 to-primary-700 bg-clip-text text-transparent dark:from-primary-400 dark:to-primary-600">
-              & Tool Suite
+              & 工具集
             </span>
           </h1>
           <p style={{ color: 'var(--text-muted)' }} className="mx-auto max-w-lg">
-            Your centralized hub for development, AI, finance, and media tools.
-            Everything you need in one place.
+            集开发、AI、金融和影音工具于一体的个人中心。
+            你需要的一切，尽在此处。
           </p>
         </motion.header>
 
@@ -112,16 +112,16 @@ export default function Dashboard({ onNavigate }: DashboardProps) {
             className="py-20 text-center"
           >
             <p className="text-lg" style={{ color: 'var(--text-faint)' }}>
-              No tools match your search.
+              没有找到匹配的工具。
             </p>
             <button
               onClick={() => {
                 setQuery('')
-                setSelectedCategory('All')
+                setSelectedCategory('全部')
               }}
               className="mt-3 text-sm text-primary-500 hover:text-primary-400"
             >
-              Clear filters
+              清除筛选
             </button>
           </motion.div>
         )}
@@ -131,7 +131,7 @@ export default function Dashboard({ onNavigate }: DashboardProps) {
           className="mt-16 py-6 text-center text-xs"
           style={{ borderTop: '1px solid var(--footer-border)', color: 'var(--footer-text)' }}
         >
-          Built with React, Tailwind CSS, and Framer Motion
+          基于 React、Tailwind CSS 和 Framer Motion 构建
         </footer>
       </main>
     </div>
