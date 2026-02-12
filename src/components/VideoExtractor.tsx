@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import {
   ArrowLeft,
@@ -9,6 +9,10 @@ import {
   User,
   Link2,
   ExternalLink,
+  Play,
+  Pause,
+  Volume2,
+  VolumeX,
 } from 'lucide-react'
 import ThemeToggle from './ThemeToggle'
 
@@ -38,6 +42,10 @@ export default function VideoExtractor({ onBack }: Props) {
   const [url, setUrl] = useState('')
   const [videoInfo, setVideoInfo] = useState<VideoInfo | null>(null)
   const [error, setError] = useState('')
+  const [isPlaying, setIsPlaying] = useState(false)
+  const [isMuted, setIsMuted] = useState(false)
+  const [showPlayer, setShowPlayer] = useState(false)
+  const videoRef = useRef<HTMLVideoElement>(null)
 
   async function handleExtract() {
     const trimmed = url.trim()
@@ -69,11 +77,33 @@ export default function VideoExtractor({ onBack }: Props) {
     }
   }
 
+  function togglePlay() {
+    const v = videoRef.current
+    if (!v) return
+    if (v.paused) {
+      v.play()
+      setIsPlaying(true)
+    } else {
+      v.pause()
+      setIsPlaying(false)
+    }
+  }
+
+  function toggleMute() {
+    const v = videoRef.current
+    if (!v) return
+    v.muted = !v.muted
+    setIsMuted(v.muted)
+  }
+
   function handleReset() {
     setStep('input')
     setVideoInfo(null)
     setUrl('')
     setError('')
+    setIsPlaying(false)
+    setIsMuted(false)
+    setShowPlayer(false)
   }
 
   return (
@@ -204,21 +234,81 @@ export default function VideoExtractor({ onBack }: Props) {
                 className="overflow-hidden rounded-2xl"
                 style={{ background: 'var(--card-bg)', border: '1px solid var(--card-border)' }}
               >
-                {videoInfo.thumbnail && (
-                  <div className="relative aspect-video w-full overflow-hidden bg-black/10">
-                    <img
-                      src={videoInfo.thumbnail}
-                      alt={videoInfo.title}
-                      className="h-full w-full object-cover"
-                    />
-                    {videoInfo.duration > 0 && (
-                      <span className="absolute bottom-3 right-3 flex items-center gap-1 rounded-lg bg-black/70 px-2 py-1 text-xs font-medium text-white">
-                        <Clock className="h-3 w-3" />
-                        {formatDuration(videoInfo.duration)}
-                      </span>
-                    )}
-                  </div>
-                )}
+                {/* Video player / Thumbnail */}
+                <div className="relative aspect-video w-full overflow-hidden bg-black">
+                  {showPlayer ? (
+                    <>
+                      <video
+                        ref={videoRef}
+                        src={videoInfo.videoUrl}
+                        poster={videoInfo.thumbnail}
+                        className="h-full w-full object-contain"
+                        onEnded={() => setIsPlaying(false)}
+                        onPlay={() => setIsPlaying(true)}
+                        onPause={() => setIsPlaying(false)}
+                      />
+                      {/* Player controls overlay */}
+                      <div className="absolute bottom-0 left-0 right-0 flex items-center gap-3 bg-gradient-to-t from-black/80 to-transparent px-4 pb-3 pt-8">
+                        <button
+                          onClick={togglePlay}
+                          className="flex h-8 w-8 items-center justify-center rounded-full bg-white/20 backdrop-blur-sm transition-colors hover:bg-white/30"
+                        >
+                          {isPlaying ? (
+                            <Pause className="h-4 w-4 text-white" />
+                          ) : (
+                            <Play className="h-4 w-4 text-white" />
+                          )}
+                        </button>
+                        <button
+                          onClick={toggleMute}
+                          className="flex h-8 w-8 items-center justify-center rounded-full bg-white/20 backdrop-blur-sm transition-colors hover:bg-white/30"
+                        >
+                          {isMuted ? (
+                            <VolumeX className="h-4 w-4 text-white" />
+                          ) : (
+                            <Volume2 className="h-4 w-4 text-white" />
+                          )}
+                        </button>
+                        {videoInfo.duration > 0 && (
+                          <span className="ml-auto flex items-center gap-1 text-xs text-white/80">
+                            <Clock className="h-3 w-3" />
+                            {formatDuration(videoInfo.duration)}
+                          </span>
+                        )}
+                      </div>
+                    </>
+                  ) : (
+                    <>
+                      {videoInfo.thumbnail && (
+                        <img
+                          src={videoInfo.thumbnail}
+                          alt={videoInfo.title}
+                          className="h-full w-full object-cover"
+                        />
+                      )}
+                      {/* Play button overlay */}
+                      <button
+                        onClick={() => {
+                          setShowPlayer(true)
+                          setTimeout(() => {
+                            videoRef.current?.play()
+                          }, 100)
+                        }}
+                        className="absolute inset-0 flex items-center justify-center bg-black/20 transition-colors hover:bg-black/30"
+                      >
+                        <div className="flex h-16 w-16 items-center justify-center rounded-full bg-white/90 shadow-xl backdrop-blur-sm transition-transform hover:scale-110">
+                          <Play className="h-7 w-7 text-pink-600" style={{ marginLeft: 3 }} />
+                        </div>
+                      </button>
+                      {videoInfo.duration > 0 && (
+                        <span className="absolute bottom-3 right-3 flex items-center gap-1 rounded-lg bg-black/70 px-2 py-1 text-xs font-medium text-white">
+                          <Clock className="h-3 w-3" />
+                          {formatDuration(videoInfo.duration)}
+                        </span>
+                      )}
+                    </>
+                  )}
+                </div>
 
                 <div className="p-5">
                   <h2
