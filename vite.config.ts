@@ -3,6 +3,17 @@ import react from '@vitejs/plugin-react'
 import tailwindcss from '@tailwindcss/vite'
 import type { IncomingMessage, ServerResponse } from 'http'
 import { execFile } from 'child_process'
+import { randomInt } from 'crypto'
+import {
+  createWriteStream,
+  existsSync,
+  mkdirSync,
+  readFileSync,
+  writeFileSync,
+  unlinkSync,
+  createReadStream,
+} from 'fs'
+import { join, extname } from 'path'
 
 /**
  * Vite dev-server middleware that proxies POST /api/generate-slides
@@ -224,6 +235,255 @@ function videoExtractorProxy(): Plugin {
   }
 }
 
+/**
+ * Temp Drive: upload files, get a 6-digit extraction code, download by code.
+ * Files are stored on local disk; metadata persisted to a JSON file.
+ * Expired files are cleaned up automatically every 5 minutes.
+ */
+interface TempDriveRecord {
+  code: string
+  originalName: string
+  storageName: string
+  size: number
+  uploadedAt: number
+  expiresAt: number
+  downloads: number
+}
+
+function tempDrivePlugin(): Plugin {
+  const DATA_DIR = join(process.cwd(), 'temp-drive-data')
+  const FILES_DIR = join(DATA_DIR, 'files')
+  const META_FILE = join(DATA_DIR, 'meta.json')
+
+  mkdirSync(FILES_DIR, { recursive: true })
+
+  // Load persisted metadata
+  const records = new Map<string, TempDriveRecord>()
+  try {
+    if (existsSync(META_FILE)) {
+      const data = JSON.parse(readFileSync(META_FILE, 'utf-8'))
+      for (const [k, v] of Object.entries(data)) {
+        records.set(k, v as TempDriveRecord)
+      }
+    }
+  } catch { /* ignore corrupt file */ }
+
+  function saveMeta() {
+    const obj: Record<string, TempDriveRecord> = {}
+    for (const [k, v] of records) obj[k] = v
+    writeFileSync(META_FILE, JSON.stringify(obj, null, 2))
+  }
+
+  function generateCode(): string {
+    let code: string
+    do {
+      code = randomInt(100000, 999999).toString()
+    } while (records.has(code))
+    return code
+  }
+
+  function cleanup() {
+    const now = Date.now()
+    let changed = false
+    for (const [code, record] of records) {
+      if (record.expiresAt < now) {
+        try { unlinkSync(join(FILES_DIR, record.storageName)) } catch { /* already deleted */ }
+        records.delete(code)
+        changed = true
+      }
+    }
+    if (changed) saveMeta()
+  }
+
+  const timer = setInterval(cleanup, 5 * 60 * 1000)
+  timer.unref()
+  cleanup()
+
+  const MAX_SIZE = 100 * 1024 * 1024 // 100 MB
+  const EXPIRY_MS = 24 * 60 * 60 * 1000 // 24 hours
+
+  return {
+    name: 'temp-drive',
+    configureServer(server) {
+      // ---- Upload ----
+      server.middlewares.use(
+        '/api/temp-drive/upload',
+        (req: IncomingMessage, res: ServerResponse, next) => {
+          if (req.method !== 'POST') return next()
+
+          const fileName = decodeURIComponent(
+            (req.headers['x-file-name'] as string) || 'unnamed',
+          )
+
+          const code = generateCode()
+          const ext = extname(fileName)
+          const storageName = `${code}${ext}`
+          const filePath = join(FILES_DIR, storageName)
+
+          const ws = createWriteStream(filePath)
+          let bytesWritten = 0
+          let aborted = false
+
+          req.on('data', (chunk: Buffer) => {
+            if (aborted) return
+            bytesWritten += chunk.length
+            if (bytesWritten > MAX_SIZE) {
+              aborted = true
+              ws.destroy()
+              try { unlinkSync(filePath) } catch { /* ok */ }
+              res.statusCode = 413
+              res.setHeader('Content-Type', 'application/json')
+              res.end(JSON.stringify({ error: '文件大小超过 100MB 限制' }))
+              return
+            }
+            ws.write(chunk)
+          })
+
+          req.on('end', () => {
+            if (aborted) return
+            ws.end(() => {
+              const now = Date.now()
+              records.set(code, {
+                code,
+                originalName: fileName,
+                storageName,
+                size: bytesWritten,
+                uploadedAt: now,
+                expiresAt: now + EXPIRY_MS,
+                downloads: 0,
+              })
+              saveMeta()
+
+              res.setHeader('Content-Type', 'application/json')
+              res.end(JSON.stringify({ code, expiresAt: now + EXPIRY_MS }))
+            })
+          })
+
+          req.on('error', () => {
+            ws.destroy()
+            try { unlinkSync(filePath) } catch { /* ok */ }
+            if (!res.writableEnded) {
+              res.statusCode = 500
+              res.setHeader('Content-Type', 'application/json')
+              res.end(JSON.stringify({ error: '上传失败' }))
+            }
+          })
+        },
+      )
+
+      // ---- File info ----
+      server.middlewares.use(
+        '/api/temp-drive/info',
+        (req: IncomingMessage, res: ServerResponse, next) => {
+          if (req.method !== 'GET') return next()
+
+          const code = (req.url || '').replace(/^\//, '').split('?')[0]
+          if (!code || !/^\d{6}$/.test(code)) {
+            res.statusCode = 400
+            res.setHeader('Content-Type', 'application/json')
+            res.end(JSON.stringify({ error: '无效的提取码' }))
+            return
+          }
+
+          const record = records.get(code)
+          if (!record) {
+            res.statusCode = 404
+            res.setHeader('Content-Type', 'application/json')
+            res.end(JSON.stringify({ error: '提取码不存在或已过期' }))
+            return
+          }
+
+          const now = Date.now()
+          if (record.expiresAt < now) {
+            try { unlinkSync(join(FILES_DIR, record.storageName)) } catch { /* ok */ }
+            records.delete(code)
+            saveMeta()
+            res.statusCode = 404
+            res.setHeader('Content-Type', 'application/json')
+            res.end(JSON.stringify({ error: '提取码已过期' }))
+            return
+          }
+
+          res.setHeader('Content-Type', 'application/json')
+          res.end(
+            JSON.stringify({
+              name: record.originalName,
+              size: record.size,
+              expiresIn: record.expiresAt - now,
+              downloads: record.downloads,
+            }),
+          )
+        },
+      )
+
+      // ---- Download ----
+      server.middlewares.use(
+        '/api/temp-drive/download',
+        (req: IncomingMessage, res: ServerResponse, next) => {
+          if (req.method !== 'GET') return next()
+
+          const code = (req.url || '').replace(/^\//, '').split('?')[0]
+          if (!code || !/^\d{6}$/.test(code)) {
+            res.statusCode = 400
+            res.setHeader('Content-Type', 'application/json')
+            res.end(JSON.stringify({ error: '无效的提取码' }))
+            return
+          }
+
+          const record = records.get(code)
+          if (!record) {
+            res.statusCode = 404
+            res.setHeader('Content-Type', 'application/json')
+            res.end(JSON.stringify({ error: '提取码不存在或已过期' }))
+            return
+          }
+
+          const now = Date.now()
+          if (record.expiresAt < now) {
+            try { unlinkSync(join(FILES_DIR, record.storageName)) } catch { /* ok */ }
+            records.delete(code)
+            saveMeta()
+            res.statusCode = 404
+            res.setHeader('Content-Type', 'application/json')
+            res.end(JSON.stringify({ error: '提取码已过期' }))
+            return
+          }
+
+          const filePath = join(FILES_DIR, record.storageName)
+          if (!existsSync(filePath)) {
+            records.delete(code)
+            saveMeta()
+            res.statusCode = 404
+            res.setHeader('Content-Type', 'application/json')
+            res.end(JSON.stringify({ error: '文件不存在' }))
+            return
+          }
+
+          record.downloads++
+          saveMeta()
+
+          const encodedName = encodeURIComponent(record.originalName)
+          res.setHeader('Content-Type', 'application/octet-stream')
+          res.setHeader('Content-Length', record.size.toString())
+          res.setHeader(
+            'Content-Disposition',
+            `attachment; filename*=UTF-8''${encodedName}`,
+          )
+
+          const rs = createReadStream(filePath)
+          rs.pipe(res)
+          rs.on('error', () => {
+            if (!res.writableEnded) {
+              res.statusCode = 500
+              res.end()
+            }
+          })
+        },
+      )
+    },
+  }
+}
+
 // https://vite.dev/config/
 export default defineConfig(({ mode }) => {
   // Load ALL env vars (empty prefix = no VITE_ filter)
@@ -235,6 +495,7 @@ export default defineConfig(({ mode }) => {
       tailwindcss(),
       deepseekProxy(env.DEEPSEEK_API_KEY ?? ''),
       videoExtractorProxy(),
+      tempDrivePlugin(),
     ],
   }
 })

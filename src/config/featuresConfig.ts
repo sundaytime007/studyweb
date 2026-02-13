@@ -16,6 +16,7 @@ import {
   BookOpen,
   Cpu,
   Video,
+  HardDrive,
 } from 'lucide-react'
 import type { Feature, Category } from '../types/features'
 
@@ -186,5 +187,14 @@ export const featuresConfig: Feature[] = [
     category: 'AI 工具',
     status: 'coming-soon',
     accentColor: '#7c3aed',
+  },
+  {
+    id: 'temp-drive',
+    title: '临时网盘',
+    description: '上传文件获取取件码，凭码提取下载，24 小时有效',
+    icon: HardDrive,
+    category: '效率办公',
+    status: 'active',
+    accentColor: '#0ea5e9',
   },
 ]
