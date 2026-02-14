@@ -13,6 +13,8 @@ import {
   Pause,
   Volume2,
   VolumeX,
+  Info,
+  AlertCircle,
 } from 'lucide-react'
 import ThemeToggle from './ThemeToggle'
 
@@ -179,6 +181,34 @@ export default function VideoExtractor({ onBack }: Props) {
                 <p className="mt-2 text-xs" style={{ color: 'var(--text-faint)' }}>
                   支持抖音分享链接、抖音网页链接等格式
                 </p>
+              </div>
+
+              {/* Usage Tips */}
+              <div
+                className="rounded-xl border p-4"
+                style={{ background: 'var(--card-bg)', borderColor: 'var(--card-border)' }}
+              >
+                <div className="mb-2 flex items-center gap-2">
+                  <Info className="h-4 w-4 text-sky-500" />
+                  <h3 className="text-sm font-semibold" style={{ color: 'var(--text-heading)' }}>
+                    使用提示
+                  </h3>
+                </div>
+                <div className="space-y-2 text-xs" style={{ color: 'var(--text-muted)' }}>
+                  <p>
+                    <strong>1. 获取链接：</strong>在抖音 App 中打开视频，点击「分享」按钮，选择「复制链接」
+                  </p>
+                  <p>
+                    <strong>2. 粘贴提取：</strong>将链接粘贴到上方输入框，点击「提取视频」按钮
+                  </p>
+                  <p>
+                    <strong>3. 下载保存：</strong>提取成功后点击「下载视频」即可保存到本地
+                  </p>
+                  <p className="mt-3 rounded-lg bg-amber-500/10 px-3 py-2 text-amber-600 dark:text-amber-400">
+                    <AlertCircle className="mb-0.5 mr-1 inline-block h-3 w-3" />
+                    <strong>注意：</strong>如果提示需要登录信息，请确保在 Chrome 浏览器中已登录抖音账号
+                  </p>
+                </div>
               </div>
 
               {error && (

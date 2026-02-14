@@ -159,26 +159,51 @@ function videoExtractorProxy(): Plugin {
             }
 
             // Run yt-dlp to get JSON metadata
-            const result = await new Promise<string>((resolve, reject) => {
-              execFile(
-                'yt-dlp',
-                [
-                  '-j',
-                  '--no-warnings',
-                  '--no-playlist',
-                  '--no-check-certificates',
-                  url.trim(),
-                ],
-                { timeout: 30000 },
-                (err, stdout, stderr) => {
-                  if (err) {
-                    reject(new Error(stderr || err.message))
-                  } else {
-                    resolve(stdout)
-                  }
-                },
-              )
-            })
+            const baseArgs = [
+              '-j',
+              '--no-warnings',
+              '--no-playlist',
+              '--no-check-certificates',
+            ]
+
+            // Helper function to run yt-dlp
+            const runYtDlp = (args: string[]): Promise<string> => {
+              return new Promise((resolve, reject) => {
+                execFile(
+                  'yt-dlp',
+                  args,
+                  { timeout: 30000 },
+                  (err, stdout, stderr) => {
+                    if (err) {
+                      reject(new Error(stderr || err.message))
+                    } else {
+                      resolve(stdout)
+                    }
+                  },
+                )
+              })
+            }
+
+            let result: string
+            try {
+              // First attempt: normal extraction
+              result = await runYtDlp([...baseArgs, url.trim()])
+            } catch (firstErr) {
+              const errorMsg = firstErr instanceof Error ? firstErr.message : String(firstErr)
+
+              // Check if it's a cookies/login error
+              if (errorMsg.includes('cookies') || errorMsg.includes('Fresh cookies') || errorMsg.includes('login')) {
+                throw new Error(
+                  '抖音需要登录验证。解决方法：\n' +
+                  '1. 使用抖音分享的短链接（v.douyin.com 开头）\n' +
+                  '2. 或在浏览器中先登录抖音账号后再试\n' +
+                  '3. 部分视频可能因隐私设置无法提取'
+                )
+              }
+
+              // Other errors
+              throw new Error(errorMsg.includes('ERROR:') ? errorMsg : `提取失败：${errorMsg}`)
+            }
 
             const info = JSON.parse(result) as {
               title?: string
