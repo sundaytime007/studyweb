@@ -4,8 +4,9 @@ import Dashboard from './components/Dashboard'
 import AIPptGenerator from './components/AIPptGenerator'
 import VideoExtractor from './components/VideoExtractor'
 import TempDrive from './components/TempDrive'
+import MusicPlayer from './components/MusicPlayer'
 
-type Page = 'dashboard' | 'ai-ppt-generator' | 'video-extractor' | 'temp-drive'
+type Page = 'dashboard' | 'ai-ppt-generator' | 'video-extractor' | 'temp-drive' | 'music-player'
 
 function App() {
   const [page, setPage] = useState<Page>('dashboard')
@@ -23,6 +24,9 @@ function App() {
       )}
       {page === 'temp-drive' && (
         <TempDrive onBack={() => setPage('dashboard')} />
+      )}
+      {page === 'music-player' && (
+        <MusicPlayer onBack={() => setPage('dashboard')} />
       )}
     </ThemeProvider>
   )
