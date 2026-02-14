@@ -35,6 +35,25 @@ export const categories: Category[] = [
  * To add a new feature, simply append an object to this array.
  */
 export const featuresConfig: Feature[] = [
+  // ---- 已上线 (active) ----
+  {
+    id: 'temp-drive',
+    title: '临时网盘',
+    description: '上传文件获取取件码，凭码提取下载，24 小时有效',
+    icon: HardDrive,
+    category: '效率办公',
+    status: 'active',
+    accentColor: '#0ea5e9',
+  },
+  {
+    id: 'ai-ppt-generator',
+    title: 'AI 演示文稿生成器',
+    description: '神经符号引擎自动生成专业演示文稿',
+    icon: Presentation,
+    category: 'AI 工具',
+    status: 'active',
+    accentColor: '#f43f5e',
+  },
   {
     id: 'music-player',
     title: '音乐播放器',
@@ -45,12 +64,22 @@ export const featuresConfig: Feature[] = [
     accentColor: '#ec4899',
   },
   {
+    id: 'video-extractor',
+    title: '视频提取器',
+    description: '输入抖音链接，提取无水印原视频下载地址',
+    icon: Video,
+    category: '影音媒体',
+    status: 'active',
+    accentColor: '#e11d48',
+  },
+  // ---- 未上线 (coming-soon) ----
+  {
     id: 'stock-tracker',
     title: '股票追踪',
     description: '实时投资组合监控与市场分析',
     icon: TrendingUp,
     category: '金融理财',
-    status: 'active',
+    status: 'coming-soon',
     accentColor: '#10b981',
   },
   {
@@ -59,7 +88,7 @@ export const featuresConfig: Feature[] = [
     description: '基于大语言模型的智能对话',
     icon: Bot,
     category: 'AI 工具',
-    status: 'active',
+    status: 'coming-soon',
     accentColor: '#6366f1',
   },
   {
@@ -68,7 +97,7 @@ export const featuresConfig: Feature[] = [
     description: '浏览器内图像编辑与增强处理',
     icon: Camera,
     category: '影音媒体',
-    status: 'beta',
+    status: 'coming-soon',
     accentColor: '#f59e0b',
   },
   {
@@ -77,7 +106,7 @@ export const featuresConfig: Feature[] = [
     description: '在浏览器中编写、运行和分享代码片段',
     icon: Code2,
     category: '开发工具',
-    status: 'active',
+    status: 'coming-soon',
     accentColor: '#3b82f6',
   },
   {
@@ -86,7 +115,7 @@ export const featuresConfig: Feature[] = [
     description: '测试与调试 REST 和 GraphQL 接口',
     icon: Terminal,
     category: '开发工具',
-    status: 'beta',
+    status: 'coming-soon',
     accentColor: '#8b5cf6',
   },
   {
@@ -97,15 +126,6 @@ export const featuresConfig: Feature[] = [
     category: '金融理财',
     status: 'coming-soon',
     accentColor: '#06b6d4',
-  },
-  {
-    id: 'ai-ppt-generator',
-    title: 'AI 演示文稿生成器',
-    description: '神经符号引擎自动生成专业演示文稿',
-    icon: Presentation,
-    category: 'AI 工具',
-    status: 'beta',
-    accentColor: '#f43f5e',
   },
   {
     id: 'ai-image-gen',
@@ -122,7 +142,7 @@ export const featuresConfig: Feature[] = [
     description: '整理笔记并通过间隔重复法复习',
     icon: BookOpen,
     category: '教育学习',
-    status: 'active',
+    status: 'coming-soon',
     accentColor: '#14b8a6',
   },
   {
@@ -158,7 +178,7 @@ export const featuresConfig: Feature[] = [
     description: '从代码库自动生成项目文档',
     icon: FileText,
     category: '效率办公',
-    status: 'beta',
+    status: 'coming-soon',
     accentColor: '#84cc16',
   },
   {
@@ -171,15 +191,6 @@ export const featuresConfig: Feature[] = [
     accentColor: '#eab308',
   },
   {
-    id: 'video-extractor',
-    title: '视频提取器',
-    description: '输入抖音链接，提取无水印原视频下载地址',
-    icon: Video,
-    category: '影音媒体',
-    status: 'active',
-    accentColor: '#e11d48',
-  },
-  {
     id: 'ml-playground',
     title: '机器学习实验室',
     description: '训练和实验机器学习模型',
@@ -187,14 +198,5 @@ export const featuresConfig: Feature[] = [
     category: 'AI 工具',
     status: 'coming-soon',
     accentColor: '#7c3aed',
-  },
-  {
-    id: 'temp-drive',
-    title: '临时网盘',
-    description: '上传文件获取取件码，凭码提取下载，24 小时有效',
-    icon: HardDrive,
-    category: '效率办公',
-    status: 'active',
-    accentColor: '#0ea5e9',
   },
 ]
