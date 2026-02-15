@@ -15,10 +15,6 @@
   font-family: 'El Messiri', sans-serif;
 }
 
-.login-page .fas {
-  width: 32px;
-}
-
 .login-page section {
   display: flex;
   justify-content: center;
@@ -161,7 +157,7 @@
   border: 1px solid rgba(255, 255, 255, 0.2);
   background: rgba(255, 255, 255, 0.2);
   padding: 8px 10px;
-  padding-left: 40px;
+  padding-left: 15px;
   border-radius: 15px;
   color: #fff;
   font-size: 16px;
@@ -182,12 +178,6 @@
 .login-page .form .inputBx .view {
   background: url(https://snipp.ru/demo/495/no-view.svg) 0 0 no-repeat;
   transition: 0.5s;
-}
-
-.login-page .form .inputBx .fas {
-  position: absolute;
-  top: 13px;
-  left: 13px;
 }
 
 .login-page .form .inputBx input[type="submit"] {
@@ -218,7 +208,7 @@
 
 .login-page .form .inputBx span {
   position: absolute;
-  left: 30px;
+  left: 5px;
   padding: 10px;
   display: inline-block;
   color: #fff;
@@ -228,7 +218,7 @@
 
 .login-page .form .inputBx input:focus ~ span,
 .login-page .form .inputBx input:valid ~ span {
-  transform: translateX(-30px) translateY(-25px);
+  transform: translateX(-5px) translateY(-25px);
   font-size: 12px;
 }
 

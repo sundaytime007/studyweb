@@ -34,7 +34,7 @@ export default function LoginPage({ onLogin }: LoginPageProps) {
       const data = await response.json()
 
       if (!response.ok) {
-        setError(data.error || 'Login failed')
+        setError(data.error || '登录失败')
         setLoading(false)
         return
       }
@@ -43,7 +43,7 @@ export default function LoginPage({ onLogin }: LoginPageProps) {
       setLoading(false)
       onLogin()
     } catch (err) {
-      setError('Network error. Please try again.')
+      setError('网络错误，请重试。')
       setLoading(false)
     }
   }
@@ -61,7 +61,7 @@ export default function LoginPage({ onLogin }: LoginPageProps) {
 
           <div className="container">
             <div className="form">
-              <h2>LOGIN to StudyWeb</h2>
+              <h2>登录 StudyWeb</h2>
               <form onSubmit={handleSubmit}>
                 <div className="inputBx">
                   <input
@@ -70,8 +70,7 @@ export default function LoginPage({ onLogin }: LoginPageProps) {
                     value={username}
                     onChange={(e) => setUsername(e.target.value)}
                   />
-                  <span>Username</span>
-                  <i className="fas fa-user-circle"></i>
+                  <span>用户名</span>
                 </div>
 
                 <div className="inputBx password">
@@ -83,13 +82,12 @@ export default function LoginPage({ onLogin }: LoginPageProps) {
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                   />
-                  <span>Password</span>
+                  <span>密码</span>
                   <a
                     href="#"
                     className={`password-control ${showPassword ? 'view' : ''}`}
                     onClick={togglePasswordVisibility}
                   ></a>
-                  <i className="fas fa-key"></i>
                 </div>
 
                 {error && (
@@ -99,7 +97,7 @@ export default function LoginPage({ onLogin }: LoginPageProps) {
                 <div className="inputBx">
                   <input
                     type="submit"
-                    value={loading ? 'Loading...' : 'Log in'}
+                    value={loading ? '登录中...' : '登录'}
                     disabled={loading}
                   />
                 </div>
