@@ -1,0 +1,184 @@
+@import url("https://fonts.googleapis.com/css?family=Roboto+Slab&display=swap");
+
+/* ============================================================
+   All styles scoped under .login-page
+   ============================================================ */
+
+.login-page {
+  height: 100vh;
+  width: 100vw;
+  background-color: #f15a5c;
+  font-family: "Roboto Slab", serif;
+  color: white;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.login-page *,
+.login-page *::before,
+.login-page *::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.login-page .preload * {
+  transition: none !important;
+}
+
+.login-page label {
+  display: block;
+  font-weight: bold;
+  text-transform: uppercase;
+  font-size: 0.7em;
+  margin-bottom: 0.35em;
+}
+
+.login-page input[type="text"],
+.login-page input[type="password"] {
+  width: 100%;
+  border: none;
+  padding: 0.5em;
+  border-radius: 2px;
+  margin-bottom: 0.5em;
+  color: #333;
+  font-family: inherit;
+  font-size: 1em;
+}
+
+.login-page input[type="text"]:focus,
+.login-page input[type="password"]:focus {
+  outline: none;
+  box-shadow: inset -1px -1px 3px rgba(0, 0, 0, 0.3);
+}
+
+.login-page button {
+  padding: 0.5em 1.5em;
+  border: none;
+  border-radius: 2px;
+  background-color: #7e5af1;
+  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.25);
+  color: white;
+  box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.45);
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 1em;
+  transition: background-color 0.2s;
+}
+
+.login-page button:hover {
+  background-color: #6a45d9;
+}
+
+.login-page button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.login-page small {
+  font-size: 1em;
+}
+
+.login-page .login--login-submit {
+  float: right;
+}
+
+.login-page .login--container {
+  width: 600px;
+  background-color: #f15a5c;
+  margin: 0 auto;
+  position: relative;
+  top: 25%;
+}
+
+.login-page .login--toggle-container {
+  position: absolute;
+  background-color: #f15a5c;
+  right: 0;
+  line-height: 2.5em;
+  width: 50%;
+  height: 120px;
+  text-align: right;
+  cursor: pointer;
+  transform: perspective(1000px) translateZ(1px);
+  transform-origin: 0% 0%;
+  transition: all 1s cubic-bezier(0.06, 0.63, 0, 1);
+  backface-visibility: hidden;
+}
+
+.login-page .login--toggle-container .toggle-login-text {
+  font-size: 4em;
+  text-decoration: underline;
+}
+
+.login-page .login--active .login--toggle-container {
+  transform: perspective(1000px) rotateY(180deg);
+  background-color: #a52022;
+}
+
+.login-page .login--username-container,
+.login-page .login--password-container {
+  float: left;
+  background-color: #f15a5c;
+  width: 50%;
+  height: 120px;
+  padding: 0.5em;
+}
+
+.login-page .login--username-container {
+  transform-origin: 100% 0%;
+  transform: perspective(1000px) rotateY(180deg);
+  transition: all 1s cubic-bezier(0.06, 0.63, 0, 1);
+  background-color: #a52022;
+  backface-visibility: hidden;
+}
+
+.login-page .login--active .login--username-container {
+  transform: perspective(1000px) rotateY(0deg);
+  background-color: #f15a5c;
+}
+
+/* Error message */
+.login-page .login--error {
+  clear: both;
+  padding: 0.6em 0.5em;
+  font-size: 0.85em;
+  color: #fff;
+  text-align: center;
+  background-color: rgba(0, 0, 0, 0.25);
+  border-radius: 2px;
+  margin-top: 4px;
+  animation: login-shake 0.4s ease;
+}
+
+@keyframes login-shake {
+  0%, 100% { transform: translateX(0); }
+  20%, 60% { transform: translateX(-6px); }
+  40%, 80% { transform: translateX(6px); }
+}
+
+/* Loading spinner */
+.login-page .login--loading {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  border: 2px solid rgba(255, 255, 255, 0.4);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: login-spin 0.6s linear infinite;
+  margin-right: 6px;
+  vertical-align: middle;
+}
+
+@keyframes login-spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+  .login-page .login--container {
+    width: 90%;
+  }
+}

@@ -3,7 +3,7 @@ import react from '@vitejs/plugin-react'
 import tailwindcss from '@tailwindcss/vite'
 import type { IncomingMessage, ServerResponse } from 'http'
 import { execFile } from 'child_process'
-import { randomInt } from 'crypto'
+import { randomInt, createHash, randomBytes } from 'crypto'
 import {
   createWriteStream,
   existsSync,
@@ -254,6 +254,80 @@ function videoExtractorProxy(): Plugin {
               }),
             )
           }
+        },
+      )
+    },
+  }
+}
+
+/**
+ * Authentication plugin.
+ * Password is stored as a SHA-256 hash — the plaintext never appears in source.
+ * On successful login a random session token is returned and tracked server-side.
+ */
+function authPlugin(): Plugin {
+  // SHA-256 hash of the password – plaintext is never stored
+  const PASSWORD_HASH =
+    '16da16f07bbff1ac3f8ce520e50d87fad1bd802ebd862410420797e14a01990a'
+
+  const sessions = new Set<string>()
+
+  return {
+    name: 'auth',
+    configureServer(server) {
+      // ---- Login ----
+      server.middlewares.use(
+        '/api/auth/login',
+        async (req: IncomingMessage, res: ServerResponse, next) => {
+          if (req.method !== 'POST') return next()
+
+          const body: string = await new Promise((resolve) => {
+            let data = ''
+            req.on('data', (chunk: Buffer) => (data += chunk.toString()))
+            req.on('end', () => resolve(data))
+          })
+
+          try {
+            const { password } = JSON.parse(body) as { password: string }
+            const hash = createHash('sha256').update(password).digest('hex')
+
+            if (hash === PASSWORD_HASH) {
+              const token = randomBytes(32).toString('hex')
+              sessions.add(token)
+              res.setHeader('Content-Type', 'application/json')
+              res.end(JSON.stringify({ ok: true, token }))
+            } else {
+              res.statusCode = 401
+              res.setHeader('Content-Type', 'application/json')
+              res.end(JSON.stringify({ ok: false, error: '密码错误' }))
+            }
+          } catch {
+            res.statusCode = 400
+            res.setHeader('Content-Type', 'application/json')
+            res.end(JSON.stringify({ ok: false, error: '请求格式错误' }))
+          }
+        },
+      )
+
+      // ---- Verify token ----
+      server.middlewares.use(
+        '/api/auth/verify',
+        (req: IncomingMessage, res: ServerResponse, next) => {
+          if (req.method !== 'POST') return next()
+
+          const body: string[] = []
+          req.on('data', (chunk: Buffer) => body.push(chunk.toString()))
+          req.on('end', () => {
+            try {
+              const { token } = JSON.parse(body.join('')) as { token: string }
+              const valid = sessions.has(token)
+              res.setHeader('Content-Type', 'application/json')
+              res.end(JSON.stringify({ ok: valid }))
+            } catch {
+              res.setHeader('Content-Type', 'application/json')
+              res.end(JSON.stringify({ ok: false }))
+            }
+          })
         },
       )
     },
@@ -518,6 +592,7 @@ export default defineConfig(({ mode }) => {
     plugins: [
       react(),
       tailwindcss(),
+      authPlugin(),
       deepseekProxy(env.DEEPSEEK_API_KEY ?? ''),
       videoExtractorProxy(),
       tempDrivePlugin(),
