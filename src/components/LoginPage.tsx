@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, FormEvent } from 'react'
 import './LoginPage.css'
 
 interface LoginPageProps {
@@ -6,44 +6,18 @@ interface LoginPageProps {
 }
 
 export default function LoginPage({ onLogin }: LoginPageProps) {
-  const [preloaded, setPreloaded] = useState(true)
-  const [active, setActive] = useState(false)
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
+  const [showPassword, setShowPassword] = useState(false)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
-  const timerRef = useRef<number>()
-  const usernameInputRef = useRef<HTMLInputElement>(null)
 
-  useEffect(() => {
-    // Remove preload class on mount
-    setPreloaded(false)
-
-    // Auto-toggle after 2 seconds
-    timerRef.current = window.setTimeout(() => {
-      setActive(true)
-    }, 2000)
-
-    return () => {
-      if (timerRef.current) {
-        window.clearTimeout(timerRef.current)
-      }
-    }
-  }, [])
-
-  const handleToggle = () => {
-    if (timerRef.current) {
-      window.clearTimeout(timerRef.current)
-    }
-    setActive(!active)
-    if (!active) {
-      setTimeout(() => {
-        usernameInputRef.current?.focus()
-      }, 100)
-    }
+  const togglePasswordVisibility = (e: React.MouseEvent) => {
+    e.preventDefault()
+    setShowPassword(!showPassword)
   }
 
-  const handleLogin = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault()
     setError('')
     setLoading(true)
@@ -65,7 +39,6 @@ export default function LoginPage({ onLogin }: LoginPageProps) {
         return
       }
 
-      // Store token in sessionStorage
       sessionStorage.setItem('auth_token', data.token)
       setLoading(false)
       onLogin()
@@ -77,53 +50,64 @@ export default function LoginPage({ onLogin }: LoginPageProps) {
 
   return (
     <div className="login-page">
-      <div className={`login--container ${preloaded ? 'preload' : ''} ${active ? 'login--active' : ''} ${error ? 'login--error' : ''}`}>
-        <form className="login--form" onSubmit={handleLogin}>
-          <div className="login--username-container">
-            <label>Username</label>
-            <input
-              ref={usernameInputRef}
-              type="text"
-              placeholder="Username"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-              autoFocus
-            />
+      <section>
+        <div className="box">
+          <div className="square" style={{ '--i': 0 } as React.CSSProperties}></div>
+          <div className="square" style={{ '--i': 1 } as React.CSSProperties}></div>
+          <div className="square" style={{ '--i': 2 } as React.CSSProperties}></div>
+          <div className="square" style={{ '--i': 3 } as React.CSSProperties}></div>
+          <div className="square" style={{ '--i': 4 } as React.CSSProperties}></div>
+          <div className="square" style={{ '--i': 5 } as React.CSSProperties}></div>
+
+          <div className="container">
+            <div className="form">
+              <h2>LOGIN to StudyWeb</h2>
+              <form onSubmit={handleSubmit}>
+                <div className="inputBx">
+                  <input
+                    type="text"
+                    required
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value)}
+                  />
+                  <span>Username</span>
+                  <i className="fas fa-user-circle"></i>
+                </div>
+
+                <div className="inputBx password">
+                  <input
+                    id="password-input"
+                    type={showPassword ? 'text' : 'password'}
+                    name="password"
+                    required
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                  />
+                  <span>Password</span>
+                  <a
+                    href="#"
+                    className={`password-control ${showPassword ? 'view' : ''}`}
+                    onClick={togglePasswordVisibility}
+                  ></a>
+                  <i className="fas fa-key"></i>
+                </div>
+
+                {error && (
+                  <div className="error-message">{error}</div>
+                )}
+
+                <div className="inputBx">
+                  <input
+                    type="submit"
+                    value={loading ? 'Loading...' : 'Log in'}
+                    disabled={loading}
+                  />
+                </div>
+              </form>
+            </div>
           </div>
-
-          <div className="login--password-container">
-            <label>Password</label>
-            <input
-              type="password"
-              placeholder="Password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-            />
-          </div>
-
-          {error && (
-            <div className="login--error-message">{error}</div>
-          )}
-
-          <button
-            type="submit"
-            className="login--login-submit"
-            disabled={loading}
-          >
-            {loading ? (
-              <span className="login--spinner"></span>
-            ) : (
-              'Login'
-            )}
-          </button>
-        </form>
-
-        <div className="login--toggle-container" onClick={handleToggle}>
-          <small>Hey you,</small>
-          <div className="js-toggle-login">Login</div>
-          <small>already</small>
         </div>
-      </div>
+      </section>
     </div>
   )
 }
