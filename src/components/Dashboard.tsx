@@ -36,7 +36,7 @@ export default function Dashboard({ onNavigate }: DashboardProps) {
 
   return (
     <div className="mesh-gradient relative min-h-screen">
-      <Sidebar features={featuresConfig} />
+      <Sidebar features={featuresConfig} onNavigate={onNavigate} />
 
       {/* Theme toggle — fixed top-right */}
       <div className="fixed right-4 top-4 z-50">
@@ -68,13 +68,13 @@ export default function Dashboard({ onNavigate }: DashboardProps) {
             >
               个人工作台
             </span>
-            <br />
             <span className="bg-gradient-to-r from-primary-500 to-primary-700 bg-clip-text text-transparent dark:from-primary-400 dark:to-primary-600">
               & 工具集
             </span>
           </h1>
           <p style={{ color: 'var(--text-muted)' }} className="mx-auto max-w-lg">
-            集开发、AI、金融和影音工具于一体的个人中心。
+            集开发、AI、学习和影音工具于一体的个人中心。
+            <br />
             你需要的一切，尽在此处。
           </p>
         </motion.header>
@@ -131,7 +131,14 @@ export default function Dashboard({ onNavigate }: DashboardProps) {
           className="mt-16 py-6 text-center text-xs"
           style={{ borderTop: '1px solid var(--footer-border)', color: 'var(--footer-text)' }}
         >
-          基于 React、Tailwind CSS 和 Framer Motion 构建
+          <a 
+            href="https://beian.miit.gov.cn" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            className="hover:text-blue-400 transition-colors"
+          >
+            豫ICP备2025138287号-3
+          </a>
         </footer>
       </main>
     </div>

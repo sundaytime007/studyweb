@@ -15,6 +15,52 @@ import {
 } from 'fs'
 import { join, extname } from 'path'
 
+// Usage limit management for backend API
+interface UsageRecord {
+  count: number
+  date: string
+}
+
+interface UsageLimits {
+  [featureId: string]: UsageRecord
+}
+
+const DAILY_LIMIT = 200
+const usageData: UsageLimits = {}
+
+function getToday(): string {
+  return new Date().toISOString().split('T')[0]
+}
+
+function checkUsageLimit(featureId: string): boolean {
+  const today = getToday()
+  const record = usageData[featureId]
+  
+  if (!record || record.date !== today) {
+    usageData[featureId] = { count: 0, date: today }
+    return true
+  }
+  
+  return record.count < DAILY_LIMIT
+}
+
+function incrementUsage(featureId: string): void {
+  const today = getToday()
+  const record = usageData[featureId]
+  
+  if (!record || record.date !== today) {
+    usageData[featureId] = { count: 1, date: today }
+  } else {
+    record.count++
+  }
+}
+
+function sendUsageLimitError(res: ServerResponse): void {
+  res.statusCode = 429
+  res.setHeader('Content-Type', 'application/json')
+  res.end(JSON.stringify({ error: '今日使用次数已达上限 (200次)' }))
+}
+
 /**
  * Vite dev-server middleware that proxies POST /api/generate-slides
  * to the DeepSeek API. The API key stays server-side and is never
@@ -28,6 +74,11 @@ function deepseekProxy(apiKey: string): Plugin {
         '/api/generate-slides',
         async (req: IncomingMessage, res: ServerResponse, next) => {
           if (req.method !== 'POST') return next()
+          
+          // Check usage limit
+          if (!checkUsageLimit('ai-ppt-generator')) {
+            return sendUsageLimitError(res)
+          }
 
           try {
             // Parse request body
@@ -112,6 +163,9 @@ Rules:
               res.end(JSON.stringify({ error: 'DeepSeek 返回了空响应' }))
               return
             }
+
+            // Increment usage after successful generation
+            incrementUsage('ai-ppt-generator')
 
             res.setHeader('Content-Type', 'application/json')
             res.end(content)
@@ -409,6 +463,11 @@ function tempDrivePlugin(): Plugin {
         '/api/temp-drive/upload',
         (req: IncomingMessage, res: ServerResponse, next) => {
           if (req.method !== 'POST') return next()
+          
+          // Check usage limit
+          if (!checkUsageLimit('temp-drive')) {
+            return sendUsageLimitError(res)
+          }
 
           const fileName = decodeURIComponent(
             (req.headers['x-file-name'] as string) || 'unnamed',
@@ -452,6 +511,9 @@ function tempDrivePlugin(): Plugin {
                 downloads: 0,
               })
               saveMeta()
+
+              // Increment usage after successful upload
+              incrementUsage('temp-drive')
 
               res.setHeader('Content-Type', 'application/json')
               res.end(JSON.stringify({ code, expiresAt: now + EXPIRY_MS }))

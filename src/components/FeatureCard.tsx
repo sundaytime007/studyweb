@@ -25,7 +25,7 @@ interface FeatureCardProps {
 export default function FeatureCard({ feature, index, onNavigate }: FeatureCardProps) {
   const { icon: Icon, title, description, status, accentColor, id } = feature
   const statusInfo = statusStyles[status]
-  const isDisabled = status === 'coming-soon'
+  const isDisabled = status === 'coming-soon' || status === 'beta'
   const isClickable = !isDisabled && onNavigate
 
   return (

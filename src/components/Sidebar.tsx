@@ -10,9 +10,10 @@ import type { Feature } from '../types/features'
 
 interface SidebarProps {
   features: Feature[]
+  onNavigate?: (featureId: string) => void
 }
 
-export default function Sidebar({ features }: SidebarProps) {
+export default function Sidebar({ features, onNavigate }: SidebarProps) {
   const [isOpen, setIsOpen] = useState(false)
   const recentTools = features.filter((f) => f.status === 'active').slice(0, 5)
   const favoriteTools = features.filter((f) => f.status === 'beta').slice(0, 3)
@@ -64,6 +65,7 @@ export default function Sidebar({ features }: SidebarProps) {
                   return (
                     <li key={tool.id}>
                       <button
+                        onClick={() => onNavigate?.(tool.id)}
                         className="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm transition-colors hover:bg-black/[0.04] dark:hover:bg-white/[0.05]"
                         style={{ color: 'var(--text-body)' }}
                       >

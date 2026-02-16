@@ -1,4 +1,4 @@
-import { useState, useRef, useCallback } from 'react'
+import { useState, useRef, useCallback, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import {
   ArrowLeft,
@@ -19,6 +19,7 @@ import {
   Hash,
 } from 'lucide-react'
 import ThemeToggle from './ThemeToggle'
+import { getUsage, checkUsageLimit, incrementUsage } from '../lib/usageLimit'
 
 type Tab = 'upload' | 'retrieve'
 type UploadStep = 'select' | 'uploading' | 'done'
@@ -71,6 +72,14 @@ export default function TempDrive({ onBack }: Props) {
 
   // Shared
   const [error, setError] = useState('')
+  
+  // Usage limit
+  const [usage, setUsage] = useState({ count: 0, remaining: 200 })
+  
+  useEffect(() => {
+    // Update usage on component mount
+    setUsage(getUsage('temp-drive'))
+  }, [])
 
   // ===== Upload handlers =====
 
@@ -103,6 +112,13 @@ export default function TempDrive({ onBack }: Props) {
 
   async function handleUpload() {
     if (!selectedFile) return
+    
+    // Check usage limit
+    if (!checkUsageLimit('temp-drive')) {
+      setError('今日上传次数已达上限 (200次)')
+      return
+    }
+    
     setUploadStep('uploading')
     setError('')
 
@@ -117,6 +133,10 @@ export default function TempDrive({ onBack }: Props) {
         const err = await res.json()
         throw new Error(err.error || `上传失败 (${res.status})`)
       }
+
+      // Increment usage after successful upload
+      incrementUsage('temp-drive')
+      setUsage(getUsage('temp-drive'))
 
       const data = await res.json()
       setExtractionCode(data.code)
@@ -222,6 +242,9 @@ export default function TempDrive({ onBack }: Props) {
               </h1>
               <p className="text-xs" style={{ color: 'var(--text-muted)' }}>
                 上传文件获取取件码 &middot; 凭码提取下载
+              </p>
+              <p className="text-xs" style={{ color: 'var(--text-muted)' }}>
+                今日剩余上传次数: {usage.remaining}/200
               </p>
             </div>
           </div>

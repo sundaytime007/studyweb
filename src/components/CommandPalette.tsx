@@ -52,16 +52,14 @@ export default function CommandPalette({
           e.currentTarget.style.borderColor = 'var(--search-border)'
         }}
       />
-      <kbd
-        className="absolute right-3 top-1/2 -translate-y-1/2 rounded-md px-2 py-0.5 text-[11px]"
+      <span
+        className="absolute right-3 top-1/2 -translate-y-1/2 px-2 py-0.5 text-[11px]"
         style={{
-          background: 'var(--kbd-bg)',
-          border: '1px solid var(--kbd-border)',
-          color: 'var(--kbd-text)',
+          color: 'var(--text-muted)',
         }}
       >
-        Ctrl+K
-      </kbd>
+        搜索
+      </span>
     </div>
   )
 }

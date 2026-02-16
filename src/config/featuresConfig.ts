@@ -24,7 +24,6 @@ export const categories: Category[] = [
   '全部',
   '开发工具',
   'AI 工具',
-  '金融理财',
   '影音媒体',
   '效率办公',
   '教育学习',
@@ -60,7 +59,7 @@ export const featuresConfig: Feature[] = [
     description: '在线播放与管理个人音乐库',
     icon: Music,
     category: '影音媒体',
-    status: 'active',
+    status: 'beta',
     accentColor: '#ec4899',
   },
   {
@@ -69,19 +68,11 @@ export const featuresConfig: Feature[] = [
     description: '输入抖音链接，提取无水印原视频下载地址',
     icon: Video,
     category: '影音媒体',
-    status: 'active',
+    status: 'beta',
     accentColor: '#e11d48',
   },
   // ---- 未上线 (coming-soon) ----
-  {
-    id: 'stock-tracker',
-    title: '股票追踪',
-    description: '实时投资组合监控与市场分析',
-    icon: TrendingUp,
-    category: '金融理财',
-    status: 'coming-soon',
-    accentColor: '#10b981',
-  },
+
   {
     id: 'ai-assistant',
     title: 'AI 智能助手',
@@ -123,7 +114,7 @@ export const featuresConfig: Feature[] = [
     title: '数据看板',
     description: '通过交互式图表可视化数据集',
     icon: BarChart3,
-    category: '金融理财',
+    category: '效率办公',
     status: 'coming-soon',
     accentColor: '#06b6d4',
   },
@@ -163,15 +154,7 @@ export const featuresConfig: Feature[] = [
     status: 'coming-soon',
     accentColor: '#64748b',
   },
-  {
-    id: 'security-scanner',
-    title: '安全扫描器',
-    description: '审计项目中的常见安全漏洞',
-    icon: Shield,
-    category: '开发工具',
-    status: 'coming-soon',
-    accentColor: '#ef4444',
-  },
+
   {
     id: 'doc-generator',
     title: '文档生成器',

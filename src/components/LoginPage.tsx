@@ -6,7 +6,7 @@ interface LoginPageProps {
 }
 
 export default function LoginPage({ onLogin }: LoginPageProps) {
-  const [username, setUsername] = useState('')
+  const [username, setUsername] = useState('User')
   const [password, setPassword] = useState('')
   const [showPassword, setShowPassword] = useState(false)
   const [loading, setLoading] = useState(false)
@@ -61,7 +61,7 @@ export default function LoginPage({ onLogin }: LoginPageProps) {
 
           <div className="container">
             <div className="form">
-              <h2>登录 StudyWeb</h2>
+              <h2>BeSenWeb(测试版)</h2>
               <form onSubmit={handleSubmit}>
                 <div className="inputBx">
                   <input

@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import {
   ArrowLeft,
@@ -15,6 +15,7 @@ import {
 import type { POM } from '../types/pom'
 import { buildPptx } from '../lib/pptxBuilder'
 import ThemeToggle from './ThemeToggle'
+import { getUsage, checkUsageLimit, incrementUsage } from '../lib/usageLimit'
 
 const AUDIENCES = ['通用', '企业管理层', '技术团队', '投资人', '学生/教育']
 const VIBES = [
@@ -40,9 +41,24 @@ export default function AIPptGenerator({ onBack }: Props) {
   const [pom, setPom] = useState<POM | null>(null)
   const [error, setError] = useState('')
   const [downloading, setDownloading] = useState(false)
+  
+  // Usage limit
+  const [usage, setUsage] = useState({ count: 0, remaining: 200 })
+  
+  useEffect(() => {
+    // Update usage on component mount
+    setUsage(getUsage('ai-ppt-generator'))
+  }, [])
 
   async function handleGenerate() {
     if (!topic.trim()) return
+    
+    // Check usage limit
+    if (!checkUsageLimit('ai-ppt-generator')) {
+      setError('今日生成次数已达上限 (200次)')
+      return
+    }
+    
     setStep('generating')
     setError('')
 
@@ -57,6 +73,10 @@ export default function AIPptGenerator({ onBack }: Props) {
         const err = await res.json()
         throw new Error(err.error || `API error ${res.status}`)
       }
+
+      // Increment usage after successful generation
+      incrementUsage('ai-ppt-generator')
+      setUsage(getUsage('ai-ppt-generator'))
 
       const data: POM = await res.json()
       setPom(data)
@@ -117,6 +137,9 @@ export default function AIPptGenerator({ onBack }: Props) {
               </h1>
               <p className="text-xs" style={{ color: 'var(--text-muted)' }}>
                 DeepSeek V3 驱动 &middot; 输入主题，生成专业演示文稿
+              </p>
+              <p className="text-xs" style={{ color: 'var(--text-muted)' }}>
+                今日剩余生成次数: {usage.remaining}/200
               </p>
             </div>
           </div>
